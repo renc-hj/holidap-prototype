@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Around Me - Holidap</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .nav-links a.active {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .nav-links a.active::after {
+      display: none;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Main Layout */
+    .main-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 30px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #1e293b;
+    }
+
+    .category-section {
+      margin-bottom: 30px;
+    }
+
+    .category-title {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 15px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .category-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .category-item {
+      display: block;
+      padding: 8px 12px;
+      color: #64748b;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .category-item:hover {
+      background-color: #f1f5f9;
+      color: #667eea;
+    }
+
+    .category-item.active {
+      background-color: #667eea;
+      color: white;
+    }
+
+    /* Main Content */
+    .main-content {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .content-header {
+      padding: 30px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .content-header h1 {
+      font-size: 32px;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .content-header p {
+      color: #64748b;
+      font-size: 16px;
+    }
+
+    .search-section {
+      padding: 20px 30px;
+      background: #f8fafc;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 45px 12px 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #64748b;
+    }
+
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .write-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+
+    .write-btn:hover {
+      background: #5a67d8;
+    }
+
+    /* Posts */
+    .posts-container {
+      padding: 0 30px 30px;
+    }
+
+    .post-item {
+      border-bottom: 1px solid #f1f5f9;
+      padding: 25px 0;
+    }
+
+    .post-item:last-child {
+      border-bottom: none;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .post-category {
+      background: #667eea;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .post-stats {
+      display: flex;
+      gap: 15px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .post-date {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-left: auto;
+    }
+
+    .post-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      text-decoration: none;
+      margin-bottom: 10px;
+      display: block;
+      transition: color 0.3s;
+    }
+
+    .post-title:hover {
+      color: #667eea;
+    }
+
+    .post-content {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .post-author-tags {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .post-author {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 8px;
+    }
+
+    .post-tag {
+      background: #f1f5f9;
+      color: #667eea;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .post-reactions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .reaction-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #64748b;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .reaction-btn:hover {
+      color: #667eea;
+    }
+
+    .reaction-btn.positive {
+      color: #10b981;
+    }
+
+    .reaction-btn.negative {
+      color: #ef4444;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+      }
+      .sidebar {
+        position: static;
+      }
+      .nav-links {
+        gap: 20px;
+      }
+      .search-section {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+      }
+      .search-box {
+        max-width: none;
+      }
+      .chatbot-window {
+        width: 300px;
+        height: 450px;
+      }
+      .chatbot-container {
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+
+    /* Chatbot styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .chatbot-toggle {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(229, 62, 62, 0.3);
+      transition: all 0.3s ease;
+      color: white;
+      font-size: 24px;
+    }
+
+    .chatbot-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 30px rgba(229, 62, 62, 0.5);
+    }
+
+    .chatbot-window {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 350px;
+      height: 500px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .chatbot-window.open {
+      display: flex;
+      animation: chatbotSlideIn 0.3s ease;
+    }
+
+    @keyframes chatbotSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chatbot-header {
+      background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-content {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .message.bot .message-content {
+      background: white;
+      border: 1px solid #e2e8f0;
+      color: #2d3748;
+    }
+
+    .message.user .message-content {
+      background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+      color: white;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .message.bot .message-avatar {
+      background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+      color: white;
+    }
+
+    .message.user .message-avatar {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    .chatbot-input {
+      padding: 20px;
+      border-top: 1px solid #e2e8f0;
+      background: white;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 25px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .chatbot-input input:focus {
+      border-color: #e53e3e;
+    }
+
+    .send-button {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .send-button:hover {
+      transform: scale(1.1);
+    }
+
+    .typing-indicator {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .typing-indicator.show {
+      display: flex;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e0;
+      animation: typingPulse 1.5s ease-in-out infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes typingPulse {
+      0%, 60%, 100% {
+        opacity: 0.3;
+      }
+      30% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="#" class="logo">Holidap</a>
+      <ul class="nav-links">
+        <li><a href="#guide">Guide</a></li>
+        <li><a href="#aroundme" class="active">Around Me</a></li>
+        <li><a href="#mypage">My Page</a></li>
+        <li><button class="icon-btn">🌐</button></li>
+        <li><button class="icon-btn">👤</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3>카테고리</h3>
+      <div class="category-section">
+        <div class="category-title">📍 위치</div>
+        <div class="category-items">
+          <a href="#vancouver" class="category-item active">밴쿠버</a>
+          <a href="#toronto" class="category-item">토론토</a>
+          <a href="#montreal" class="category-item">몬트리올</a>
+          <a href="#calgary" class="category-item">캘거리</a>
+          <a href="#ottawa" class="category-item">오타와</a>
+        </div>
+      </div>
+      <div class="category-section">
+        <div class="category-title">✈️ 여행</div>
+        <div class="category-items">
+          <a href="#banff" class="category-item">밴프</a>
+          <a href="#yellowknife" class="category-item">옐로나이프</a>
+          <a href="#niagara" class="category-item">나이아가라</a>
+          <a href="#cross-canada" class="category-item">캐나다 횡단</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <h1>Around Me</h1>
+        <p>캐나다 각 지역의 생생한 정보와 여행 팁을 공유하세요</p>
+      </div>
+
+      <div class="search-section">
+        <div class="search-box">
+          <input type="text" placeholder="제목, 내용, 태그로 검색...">
+          <span class="search-icon">🔍</span>
+        </div>
+        <div class="filter-actions">
+          <button class="filter-btn">🔽 필터</button>
+          <button class="write-btn">✏️ 글쓰기</button>
+        </div>
+      </div>
+
+      <div class="posts-container">
+        <!-- Sample Post -->
+        <article class="post-item">
+          <div class="post-meta">
+            <span class="post-category">밴쿠버</span>
+            <div class="post-stats">
+              <span>👁️ 342</span>
+              <span>💬 28</span>
+            </div>
+            <span class="post-date">2일 전</span>
+          </div>
+
+          <a href="#post1" class="post-title">
+            밴쿠버 다운타운 맛집 추천 - 현지인이 알려주는 숨은 보석들
+          </a>
+
+          <p class="post-content">
+            5년간 밴쿠버에 살면서 발견한 진짜 맛집들을 소개합니다. 관광객들이 잘 모르는 현지인들만 아는 곳들이에요. 특히 다운타운 지역에서 접근하기 쉬운 곳들로 골라봤습니다...
+          </p>
+
+          <div class="post-footer">
+            <div class="post-author-tags">
+              <span class="post-author">👤 vancouver_foodie</span>
+              <div class="post-tags">
+                <span class="post-tag">#맛집</span>
+                <span class="post-tag">#다운타운</span>
+                <span class="post-tag">#현지인추천</span>
+              </div>
+            </div>
+
+            <div class="post-reactions">
+              <span class="reaction-btn positive">👍 47</span>
+              <span class="reaction-btn negative">👎 2</span>
+              <span class="reaction-btn">😐 5</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <!-- Chatbot -->
+  <div class="chatbot-container">
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header">
+        <h3>🤖 Holidap 도우미</h3>
+        <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot">
+          <div class="message-avatar">🤖</div>
+          <div class="message-content">
+            안녕하세요! 캐나다 워킹홀리데이에 대해 궁금한 것이 있으시면 언제든지 물어보세요. 😊
+          </div>
+        </div>
+      </div>
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="message-avatar">🤖</div>
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+      <div class="chatbot-input">
+        <div class="input-group">
+          <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." onkeypress="handleKeyPress(event)">
+          <button class="send-button" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+    <button class="chatbot-toggle" onclick="toggleChatbot()">💬</button>
+  </div>
+
+  <script>
+    let isOpen = false;
+
+    function toggleChatbot() {
+      const chatbotWindow = document.getElementById('chatbotWindow');
+      isOpen = !isOpen;
+      if (isOpen) {
+        chatbotWindow.classList.add('open');
+        document.getElementById('chatInput').focus();
+      } else {
+        chatbotWindow.classList.remove('open');
+      }
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if (message === '') return;
+      addMessage(message, 'user');
+      input.value = '';
+      showTypingIndicator();
+      setTimeout(() => {
+        hideTypingIndicator();
+        const response = getBotResponse(message);
+        addMessage(response, 'bot');
+      }, 1000 + Math.random() * 2000);
+    }
+
+    function addMessage(text, sender) {
+      const messagesContainer = document.getElementById('chatbotMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.textContent = text;
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(content);
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      indicator.classList.add('show');
+      const messagesContainer = document.getElementById('chatbotMessages');
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      indicator.classList.remove('show');
+    }
+
+    function getBotResponse(message) {
+      const lowerMessage = message.toLowerCase();
+      if (lowerMessage.includes('비자') || lowerMessage.includes('visa')) {
+        return '캐나다 워킹홀리데이 비자(IEC)는 만 18-30세 한국인이 신청할 수 있습니다. 신청 시기는 보통 12월-1월경이며, 추첨을 통해 선발됩니다.';
+      } else if (lowerMessage.includes('준비') || lowerMessage.includes('준비물')) {
+        return '워킹홀리데이 준비물로는 여권, 비자, 해외여행보험, 영문 잔고증명서 등이 필요합니다.';
+      } else if (lowerMessage.includes('일자리') || lowerMessage.includes('취업') || lowerMessage.includes('job')) {
+        return '캐나다에서는 서비스업, 관광업 등 다양한 분야에서 일할 수 있습니다. SIN 발급 후 구직활동을 시작하세요.';
+      } else if (lowerMessage.includes('생활') || lowerMessage.includes('정착')) {
+        return '캐나다 정착을 위해 SIN 발급, 은행 계좌 개설, 주거지 확보가 우선입니다.';
+      } else {
+        return '죄송하지만 정확한 답변을 드리기 어렵네요. 더 구체적으로 질문해 주세요!';
+      }
+    }
+  </script>
+</body>
+</html>
